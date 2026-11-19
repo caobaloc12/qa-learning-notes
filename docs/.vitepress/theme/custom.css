@@ -1,0 +1,197 @@
+/* QA Wiki — VitePress theme customisation.
+   Keeps the original teal/ink palette and mono labels on top of the default theme. */
+
+:root {
+  --vp-c-brand-1: #0E7268;
+  --vp-c-brand-2: #0C6159;
+  --vp-c-brand-3: #0A544D;
+  --vp-c-brand-soft: rgba(14, 114, 104, 0.14);
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+
+  --vp-font-family-base: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --vp-font-family-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --qa-pass: #1B7A46;
+  --qa-pass-bg: #E3F2E9;
+  --qa-fail: #B3262E;
+  --qa-fail-bg: #FAE8E9;
+  --qa-warn: #8A5A00;
+  --qa-warn-bg: #F6EDDA;
+  --qa-skip: #5A6472;
+  --qa-skip-bg: #ECF0F3;
+  --qa-flaky: #5A4BA8;
+  --qa-flaky-bg: #EDEAF9;
+}
+
+.dark {
+  --vp-c-brand-1: #63CBBB;
+  --vp-c-brand-2: #7AD6C8;
+  --vp-c-brand-3: #9BE2D7;
+  --vp-c-brand-soft: rgba(99, 203, 187, 0.16);
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+
+  --qa-pass: #6FD69A;
+  --qa-pass-bg: #13291D;
+  --qa-fail: #F29398;
+  --qa-fail-bg: #33171A;
+  --qa-warn: #E4BC66;
+  --qa-warn-bg: #2E2413;
+  --qa-skip: #A7B2BE;
+  --qa-skip-bg: #20262D;
+  --qa-flaky: #BAAFF5;
+  --qa-flaky-bg: #241F3B;
+}
+
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.VPHero .name,
+.VPHero .text,
+.VPFeature .title,
+.VPNavBarTitle .title {
+  font-family: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.vp-doc h1 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+/* Wide tables scroll inside the article instead of pushing the page. */
+.vp-doc table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ---------- Status badges (used inline inside Markdown tables) ---------- */
+.qa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 10px 3px 9px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.qa-badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+.qa-badge.pass { color: var(--qa-pass); background: var(--qa-pass-bg); }
+.qa-badge.fail { color: var(--qa-fail); background: var(--qa-fail-bg); }
+.qa-badge.warn { color: var(--qa-warn); background: var(--qa-warn-bg); }
+.qa-badge.skip { color: var(--qa-skip); background: var(--qa-skip-bg); }
+.qa-badge.flaky { color: var(--qa-flaky); background: var(--qa-flaky-bg); }
+
+/* ---------- Sample test summary card ---------- */
+.qa-specimen {
+  max-width: 420px;
+  margin: 20px 0 26px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 14px;
+  background: var(--vp-c-bg);
+}
+
+.qa-spec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.qa-spec-label {
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+}
+
+.qa-spec-build {
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--vp-c-default-soft);
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  color: var(--vp-c-text-2);
+  white-space: nowrap;
+}
+
+.qa-vbadge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: var(--qa-warn-bg);
+  color: var(--qa-warn);
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.qa-spec-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--vp-c-default-soft);
+}
+
+.qa-spec-bar span {
+  display: block;
+  height: 100%;
+}
+
+.qa-spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.qa-spec-grid li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--vp-c-text-2);
+}
+
+.qa-spec-grid i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.qa-spec-grid b {
+  margin-left: auto;
+  font-family: var(--vp-font-family-mono);
+  font-size: 11.5px;
+  color: var(--vp-c-text-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.qa-spec-foot {
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 10px;
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--vp-c-text-3);
+}

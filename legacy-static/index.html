@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>QA Wiki</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/wiki.css">
+<script src="assets/wiki.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content · Bỏ qua nội dung</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      </svg>
+    </button>
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"></rect>
+        <path d="M8.3 12.4l2.5 2.5 5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span>QA Wiki</span>
+    </a>
+    <span class="topbar-spacer"></span>
+    <div class="lang" role="group" aria-label="Language / Ngôn ngữ">
+      <button type="button" data-set-lang="en" aria-pressed="true" aria-label="English">EN</button>
+      <button type="button" data-set-lang="vi" aria-pressed="false" aria-label="Tiếng Việt">VI</button>
+    </div>
+  </div>
+</header>
+
+<div id="backdrop" class="backdrop" hidden></div>
+
+<div class="layout">
+  <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+    <ul>
+      <li><a href="index.html">QA Wiki</a></li>
+      <li><a href="qa-test-report-guide.html">Writing QA test reports</a></li>
+      <li><a href="api-vs-ui-test-reports.html">UI vs API test reports</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <div class="lang-block" lang="en" data-lang="en">
+      <article class="article">
+        <p class="kicker">QA engineering · Learning notes</p>
+        <h1>QA Wiki</h1>
+        <p class="lede">Working notes and guides for QA engineering. Bilingual English / Vietnamese, packaged as plain static HTML — open the folder and double-click a page. No server, no build step.</p>
+
+        <h2>Documents</h2>
+        <div class="doc-grid">
+          <a class="doc-card" href="qa-test-report-guide.html">
+            <span class="dc-tag">Reporting</span>
+            <span class="dc-title">Writing QA test reports</span>
+            <span class="dc-desc">What makes a report answer a release decision: principles, anatomy, statuses, web UI specifics, defect entries and copy-ready templates.</span>
+            <span class="dc-more">Read the guide →</span>
+          </a>
+          <a class="doc-card" href="api-vs-ui-test-reports.html">
+            <span class="dc-tag">Test layers</span>
+            <span class="dc-title">UI vs API test reports</span>
+            <span class="dc-desc">Why the two reports differ at the evidence level while sharing one reporting standard — with coverage matrices and defect examples.</span>
+            <span class="dc-more">Read the guide →</span>
+          </a>
+        </div>
+
+        <h2>How this wiki is built</h2>
+        <ul class="list">
+          <li>Plain HTML pages sharing one stylesheet and one navigation script.</li>
+          <li>The sidebar and the “On this page” list are generated in the browser from a small manifest inside <code>assets/wiki.js</code>.</li>
+          <li>No build step, no server, no framework — it runs straight from the file system.</li>
+          <li>Upgrade path: if you later want full-text search, versioned docs or a hosted site, the same content can move into a static-site generator such as VitePress or MkDocs.</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="lang-block" lang="vi" data-lang="vi">
+      <article class="article">
+        <p class="kicker">Kỹ thuật QA · Ghi chú học tập</p>
+        <h1>QA Wiki</h1>
+        <p class="lede">Ghi chú và hướng dẫn kỹ thuật QA. Song ngữ Anh / Việt, đóng gói bằng HTML tĩnh thuần — mở thư mục và nhấp đúp vào trang. Không cần server, không có bước build.</p>
+
+        <h2>Tài liệu</h2>
+        <div class="doc-grid">
+          <a class="doc-card" href="qa-test-report-guide.html">
+            <span class="dc-tag">Báo cáo</span>
+            <span class="dc-title">Viết báo cáo kiểm thử QA</span>
+            <span class="dc-desc">Điều gì làm nên một báo cáo trả lời được câu hỏi phát hành: nguyên tắc, cấu trúc, trạng thái, đặc thù UI web, mục lỗi và biểu mẫu sẵn dùng.</span>
+            <span class="dc-more">Đọc hướng dẫn →</span>
+          </a>
+          <a class="doc-card" href="api-vs-ui-test-reports.html">
+            <span class="dc-tag">Tầng kiểm thử</span>
+            <span class="dc-title">Báo cáo kiểm thử UI và API</span>
+            <span class="dc-desc">Vì sao hai báo cáo khác nhau ở mức bằng chứng nhưng dùng chung một chuẩn — kèm ma trận độ phủ và ví dụ lỗi.</span>
+            <span class="dc-more">Đọc hướng dẫn →</span>
+          </a>
+        </div>
+
+        <h2>Cách wiki này được xây</h2>
+        <ul class="list">
+          <li>Các trang HTML thuần dùng chung một stylesheet và một script điều hướng.</li>
+          <li>Menu bên trái và mục lục “Trong trang này” được sinh trong trình duyệt từ một manifest nhỏ trong <code>assets/wiki.js</code>.</li>
+          <li>Không build, không server, không framework — chạy trực tiếp từ hệ thống tệp.</li>
+          <li>Lối nâng cấp: nếu sau này cần tìm kiếm toàn văn, phiên bản hóa tài liệu hoặc đưa lên web, có thể chuyển nội dung sang static-site generator như VitePress hoặc MkDocs.</li>
+        </ul>
+      </article>
+    </div>
+
+    <nav id="prev-next" class="prev-next" aria-label="Document navigation"></nav>
+  </main>
+
+  <aside class="toc-aside" aria-labelledby="toc-label">
+    <p id="toc-label" class="toc-label">On this page</p>
+    <nav id="page-toc" aria-labelledby="toc-label"></nav>
+  </aside>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span data-en="QA Wiki · static docs" data-vi="QA Wiki · tài liệu tĩnh"></span>
+    <span data-en="Plain HTML · no build step" data-vi="HTML thuần · không cần build"></span>
+  </div>
+</footer>
+</body>
+</html>

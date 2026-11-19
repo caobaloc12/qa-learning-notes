@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>UI vs API Test Reports</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/wiki.css">
+<script src="assets/wiki.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content · Bỏ qua nội dung</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      </svg>
+    </button>
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"></rect>
+        <path d="M8.3 12.4l2.5 2.5 5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span>QA Wiki</span>
+    </a>
+    <span class="topbar-spacer"></span>
+    <div class="lang" role="group" aria-label="Language / Ngôn ngữ">
+      <button type="button" data-set-lang="en" aria-pressed="true" aria-label="English">EN</button>
+      <button type="button" data-set-lang="vi" aria-pressed="false" aria-label="Tiếng Việt">VI</button>
+    </div>
+  </div>
+</header>
+
+<div id="backdrop" class="backdrop" hidden></div>
+
+<div class="layout">
+  <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+    <ul>
+      <li><a href="index.html">QA Wiki</a></li>
+      <li><a href="qa-test-report-guide.html">Writing QA test reports</a></li>
+      <li><a href="api-vs-ui-test-reports.html">UI vs API test reports</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <div class="lang-block" lang="en" data-lang="en">
+      <article class="article">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="index.html">QA Wiki</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <span>Test layers</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span aria-current="page">UI vs API reports</span>
+        </nav>
+        <p class="kicker">Test layers · Reporting</p>
+        <h1>UI and API test reports: same skeleton, different evidence</h1>
+        <p class="lede">The template should differ — but not into two unrelated documents. Keep one reporting standard; change what each layer records as environment, coverage, evidence and metrics.</p>
+        <div class="chips">
+          <span class="chip"><b>2</b> layers</span>
+          <span class="chip"><b>3</b> coverage matrices</span>
+          <span class="chip"><b>2</b> defect templates</span>
+        </div>
+
+        <h2>What stays identical</h2>
+        <p>The outer structure is the decision artifact, and it must look the same in a UI report, an API report and a combined release report:</p>
+        <ul class="list">
+          <li>Verdict format: Go / No-Go / Go with conditions.</li>
+          <li>Status taxonomy: passed, failed, blocked, not run, flaky.</li>
+          <li>Severity scale, priority scale and defect ID scheme.</li>
+          <li>Section order: metadata → summary → scope → results → defects → risks → recommendation.</li>
+          <li>The rule that every failure carries evidence, an owner and a next step.</li>
+        </ul>
+        <p>This follows the standard test-summary-report structure (IEEE 829 / ISO 29119 lineage). Only the content inside the sections changes by layer.</p>
+
+        <h2>Where the two diverge</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Dimension</th><th scope="col">UI test report</th><th scope="col">API test report</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Unit under test</td>
+                <td>User journey, screen, component state.</td>
+                <td>Endpoint or operation, contract.</td>
+              </tr>
+              <tr>
+                <td>Environment block</td>
+                <td>Browser and version, OS, device, viewport, zoom, locale, network throttling.</td>
+                <td>Service name and version or image tag, gateway URL, auth scheme and scopes, tenant, DB seed, downstream services or mocks, OpenAPI spec version.</td>
+              </tr>
+              <tr>
+                <td>Evidence</td>
+                <td>Annotated screenshot, recording, console errors, HAR.</td>
+                <td>Request/response pair (redacted), status and body, correlation or trace ID, service logs, schema diff.</td>
+              </tr>
+              <tr>
+                <td>Coverage</td>
+                <td>Journeys × browsers/devices; visual states (empty, loading, error); accessibility; i18n.</td>
+                <td>Operations × methods × status codes; authz matrix; validation and boundaries; contract; idempotency.</td>
+              </tr>
+              <tr>
+                <td>Key metrics</td>
+                <td>Cross-browser pass rate, flake rate (first run vs retry), visual diffs, a11y violations, Core Web Vitals.</td>
+                <td>p50/p95/p99 latency vs budget, error rate by status class, schema-validation failures, spec coverage %.</td>
+              </tr>
+              <tr>
+                <td>Usual tools</td>
+                <td>Playwright, Cypress, axe-core, Percy or Chromatic, Lighthouse.</td>
+                <td>Postman/Newman, REST Assured, Karate, Pact, Schemathesis, k6 or Gatling.</td>
+              </tr>
+              <tr>
+                <td>What “blocked” usually means</td>
+                <td>Staging UI down, third-party widget or CAPTCHA, broken test account.</td>
+                <td>Service or dependency down, token issuer broken, DB seed mismatch, mock drift.</td>
+              </tr>
+              <tr>
+                <td>Severity drivers</td>
+                <td>User-blocking flow, data loss on screen, keyboard trap, broken layout.</td>
+                <td>Data corruption, authz bypass, contract break, core 5xx, latency SLA breach.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>What a UI report adds</h2>
+        <p>Beyond the shared skeleton, a UI report carries evidence that the environment itself is part of the result.</p>
+        <h3>Environment matrix (example)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Browser</th><th scope="col">Version</th><th scope="col">OS</th><th scope="col">Viewport</th><th scope="col">Result</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Chromium (Chrome 142)</td><td>142</td><td>macOS 15</td><td>1440×900</td><td>Pass</td></tr>
+              <tr><td>WebKit (Safari 19)</td><td>19</td><td>macOS 15</td><td>1440×900</td><td>Fail — BUG-456</td></tr>
+              <tr><td>WebKit (iOS Safari)</td><td>19</td><td>iOS 19</td><td>390×844</td><td>Not run</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Journey coverage (example)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Journey</th><th scope="col">Chrome</th><th scope="col">Safari</th><th scope="col">Firefox</th><th scope="col">Mobile</th><th scope="col">A11y</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Sign up / login</td><td>Pass</td><td>Pass</td><td>Pass</td><td>Pass</td><td>Pass</td></tr>
+              <tr><td>Checkout with discount</td><td>Fail (BUG-456)</td><td>Fail (BUG-456)</td><td>Pass</td><td>Not run</td><td>Pass</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Also declare, or mark out of scope</h3>
+        <ul class="list">
+          <li>Visual states: empty, loading, error, partial data, long strings.</li>
+          <li>Accessibility: WCAG 2.2 AA, keyboard-only operation, a screen reader, contrast, 200% zoom.</li>
+          <li>i18n, RTL and responsive breakpoints.</li>
+          <li>Visual regression baselines: which diffs are intentional and which are defects.</li>
+          <li>Flake reporting: first-run results separately from retries, because retries mask real bugs.</li>
+        </ul>
+
+        <h2>What an API report adds</h2>
+        <p>An API report replaces the browser matrix with service state and a contract. Its evidence is the request and response, not the screen.</p>
+        <h3>Service and contract block (example)</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">Service under test</span>
+            <button type="button" class="copy-btn" data-copy="service-block-en" data-copied="Copied" data-fallback="Press ⌘C / Ctrl+C">Copy</button>
+          </div>
+          <pre id="service-block-en" tabindex="0">Service: orders-svc 2.14.3 (image sha-3f2a91c)
+Base URL: https://staging-api.example.com/orders/v2
+Spec: OpenAPI 3.1 @ commit a1b2c3d (diff since last release: 2 new fields)
+Auth: OAuth2 client-credentials, scopes [orders:write], tenant=acme
+Data: fixtures seed-2025-11-18-a; cleanup run: yes
+Dependencies: payment-svc 1.9.2 (real), inventory (mocked v4)</pre>
+        </div>
+        <h3>Operation coverage and authz matrix (example)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Endpoint</th><th scope="col">Method</th><th scope="col">Happy</th><th scope="col">Validation</th><th scope="col">AuthZ</th><th scope="col">Schema</th><th scope="col">Result</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>/orders</td><td>POST</td><td>Pass</td><td>4/5 pass</td><td>Pass</td><td>Pass</td><td>Fail — BUG-401</td></tr>
+              <tr><td>/orders/{id}</td><td>GET</td><td>Pass</td><td>Pass</td><td>Pass</td><td>Pass</td><td>Pass</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The auth matrix is the API equivalent of cross-browser testing: anonymous / customer / support / admin × every operation → verify 401, 403 or 200.</p>
+        <h3>Also include</h3>
+        <ul class="list">
+          <li>Contract verification: response schema validated against OpenAPI; breaking changes flagged.</li>
+          <li>Idempotency and retries: the same key applied twice, and what the second call returns.</li>
+          <li>Data integrity: database state before and after, side effects verified.</li>
+          <li>Rate limiting and concurrency: 429 behaviour, race conditions.</li>
+          <li>Performance, if in scope: p95/p99 against a per-operation budget.</li>
+          <li>Error taxonomy: is a 500 truly 5xx? Do validation errors return 422 or 400 consistently?</li>
+        </ul>
+        <div class="callout">
+          <span class="callout-label">Hard rule</span>
+          <p>Never include tokens, cookies or PII in request/response evidence. Redact headers and bodies in the report; attach full logs to the ticket only if policy allows.</p>
+        </div>
+
+        <h2>Defect entries differ too</h2>
+        <p>Same fields, different evidence. The UI entry proves what a user saw; the API entry proves what the service returned.</p>
+        <h3>UI defect</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">BUG-456 · UI</span>
+            <button type="button" class="copy-btn" data-copy="defect-ui-en" data-copied="Copied" data-fallback="Press ⌘C / Ctrl+C">Copy</button>
+          </div>
+          <pre id="defect-ui-en" tabindex="0">BUG-456 — Checkout returns HTTP 500 when cart has discount code
+Browser/OS/Viewport: Chrome 142 / macOS 15 / 1440×900
+Steps: 1. Add item  2. Apply SAVE10  3. Click "Place order"
+Expected: confirmation page; Actual: error toast, spinner
+Evidence: screenshot.png, recording.mp4, console-errors.txt, orders.har
+Incognito: also fails | Safari: also fails | Mobile: not tested
+A11y impact: none | Screen: /checkout</pre>
+        </div>
+        <h3>API defect</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">BUG-401 · API</span>
+            <button type="button" class="copy-btn" data-copy="defect-api-en" data-copied="Copied" data-fallback="Press ⌘C / Ctrl+C">Copy</button>
+          </div>
+          <pre id="defect-api-en" tabindex="0">BUG-401 — POST /orders returns 500 when cart has discount
+Service: orders-svc 2.14.3 | Env: staging | Spec: OpenAPI a1b2c3d
+Auth: customer JWT, tenant=acme, scope orders:write
+Request: POST /api/orders  body: {cartId, code:"SAVE10"}  (headers redacted)
+Expected: 201 + Order schema v2
+Actual: 500 + {"error":"null_pointer_at_discount.calc"}
+Correlation ID: 5f3c9a1e-... | Trace: Jaeger link
+Data preconditions: cart 98765 with SAVE10; cleanup confirmed
+Downstream: payment-svc 1.9.2 healthy
+Repro via curl: yes, 10/10
+Impact: all web and mobile checkout flows that use discount codes</pre>
+        </div>
+
+        <h2>Attribute cross-layer failures correctly</h2>
+        <p>A UI test failing does not automatically make it a UI defect. Classify by where the fix belongs.</p>
+        <ul class="list">
+          <li><strong>UI test fails because the API returns 500.</strong> The symptom is UI; the root cause is API. Count the defect once, under API, list affected journeys as impact, and have the UI report link to the API defect instead of opening a duplicate.</li>
+          <li><strong>The API fails but the UI handles it gracefully.</strong> One API defect; correct error-state behaviour may be a product requirement, not a bug.</li>
+          <li><strong>The API fails and the UI white-screens, hangs or loses input.</strong> A second, separate UI defect: missing error handling.</li>
+        </ul>
+        <p>Add two fields to every defect — <em>layer detected</em> and <em>root-cause layer</em> — and aggregate them in the summary:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Root-cause layer</th><th scope="col">Open defects</th><th scope="col">Blocking</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>UI</td><td>3</td><td>1</td></tr>
+              <tr><td>API</td><td>2</td><td>2</td></tr>
+              <tr><td>Shared / infrastructure</td><td>1</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>One release report, both layers</h2>
+        <p>Produce one release report with layer sections rather than two top-level reports. Leaders want one verdict; QA needs the separate detail.</p>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">Release report outline</span>
+            <button type="button" class="copy-btn" data-copy="outline-en" data-copied="Copied" data-fallback="Press ⌘C / Ctrl+C">Copy</button>
+          </div>
+          <pre id="outline-en" tabindex="0">1. Release verdict (single, conditions listed)
+2. Scope and test layers: UI suites, API suites, what each excluded
+3. Results — UI: journey × browser matrix, a11y, visual
+4. Results — API: operation × status-code matrix, auth matrix, contract
+5. Performance (per layer, if in scope)
+6. Defects: one list, tagged by detected layer and root-cause layer
+7. Risks, accepted gaps, residual risk by layer
+8. Evidence index: /evidence/ui, /evidence/api</pre>
+        </div>
+
+        <h2>Exit criteria differ by layer</h2>
+        <h3>UI exit criteria</h3>
+        <ul class="list">
+          <li>All P0 journeys pass on the agreed browser and device matrix.</li>
+          <li>Zero open severity-1 UI defects.</li>
+          <li>Zero critical accessibility violations.</li>
+          <li>Visual diffs reviewed and intentional.</li>
+          <li>Flake rate under the agreed threshold.</li>
+        </ul>
+        <h3>API exit criteria</h3>
+        <ul class="list">
+          <li>100% of in-scope operations covered with happy path, main negative cases and authz.</li>
+          <li>100% schema validation.</li>
+          <li>No open P1.</li>
+          <li>p95 within budget.</li>
+          <li>Contract diff reviewed and backward compatible across supported versions.</li>
+          <li>No secrets found in logs.</li>
+        </ul>
+
+        <h2>The practical rule</h2>
+        <p>Build one reporting standard with layer-specific modules: shared summary, verdict and defect taxonomy; an environment block, coverage matrices, evidence format and metrics that instantiate differently for UI and API. In an automated pipeline this is a <code>layer: ui | api</code> label plus different artifacts per layer, feeding the same report generator.</p>
+        <div class="closing">
+          <p>The template differs in content, not in standard. <strong>One skeleton, two evidence languages</strong> — and a single verdict a release manager can act on.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="lang-block" lang="vi" data-lang="vi">
+      <article class="article">
+        <nav class="crumbs" aria-label="Đường dẫn">
+          <a href="index.html">QA Wiki</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <span>Tầng kiểm thử</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span aria-current="page">Báo cáo UI và API</span>
+        </nav>
+        <p class="kicker">Tầng kiểm thử · Báo cáo</p>
+        <h1>Báo cáo kiểm thử UI và API: cùng khung, khác bằng chứng</h1>
+        <p class="lede">Biểu mẫu nên khác nhau — nhưng không phải thành hai tài liệu rời rạc. Giữ một chuẩn báo cáo duy nhất; thay đổi những gì mỗi tầng ghi lại: môi trường, độ phủ, bằng chứng và chỉ số.</p>
+        <div class="chips">
+          <span class="chip"><b>2</b> tầng</span>
+          <span class="chip"><b>3</b> ma trận độ phủ</span>
+          <span class="chip"><b>2</b> biểu mẫu lỗi</span>
+        </div>
+
+        <h2>Những gì giữ nguyên</h2>
+        <p>Cấu trúc ngoài là công cụ ra quyết định, và nó phải giống nhau trong báo cáo UI, báo cáo API và báo cáo phát hành tổng hợp:</p>
+        <ul class="list">
+          <li>Định dạng kết luận: Go / No-Go / Go có điều kiện.</li>
+          <li>Hệ thống trạng thái: đạt, không đạt, bị chặn, chưa chạy, chập chờn.</li>
+          <li>Thang mức độ, thang ưu tiên và quy ước ID lỗi.</li>
+          <li>Thứ tự các phần: siêu dữ liệu → tóm tắt → phạm vi → kết quả → lỗi → rủi ro → khuyến nghị.</li>
+          <li>Quy tắc mỗi lỗi phải có bằng chứng, người phụ trách và bước tiếp theo.</li>
+        </ul>
+        <p>Điều này theo cấu trúc báo cáo tổng kết kiểm thử chuẩn (dòng IEEE 829 / ISO 29119). Chỉ nội dung bên trong các phần thay đổi theo tầng.</p>
+
+        <h2>Hai báo cáo khác nhau ở đâu</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Khía cạnh</th><th scope="col">Báo cáo UI</th><th scope="col">Báo cáo API</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Đơn vị kiểm thử</td>
+                <td>Hành trình người dùng, màn hình, trạng thái thành phần.</td>
+                <td>Endpoint hoặc thao tác, hợp đồng (contract).</td>
+              </tr>
+              <tr>
+                <td>Khối môi trường</td>
+                <td>Trình duyệt và phiên bản, OS, thiết bị, viewport, zoom, locale, điều kiện mạng.</td>
+                <td>Tên dịch vụ và phiên bản hoặc image tag, URL gateway, cơ chế auth và scope, tenant, seed DB, dịch vụ phụ thuộc hoặc mock, phiên bản spec OpenAPI.</td>
+              </tr>
+              <tr>
+                <td>Bằng chứng</td>
+                <td>Ảnh chụp có chú thích, video, lỗi console, HAR.</td>
+                <td>Cặp request/response (đã che dữ liệu), status và body, correlation hoặc trace ID, log dịch vụ, diff schema.</td>
+              </tr>
+              <tr>
+                <td>Độ phủ</td>
+                <td>Hành trình × trình duyệt/thiết bị; trạng thái hình ảnh (rỗng, đang tải, lỗi); khả năng tiếp cận; i18n.</td>
+                <td>Thao tác × phương thức × mã trạng thái; ma trận authz; kiểm tra hợp lệ và biên; contract; idempotency.</td>
+              </tr>
+              <tr>
+                <td>Chỉ số chính</td>
+                <td>Tỷ lệ đạt đa trình duyệt, tỷ lệ chập chờn (lần đầu so với retry), visual diff, vi phạm a11y, Core Web Vitals.</td>
+                <td>Độ trễ p50/p95/p99 so với ngân sách, tỷ lệ lỗi theo lớp mã trạng thái, lỗi xác thực schema, % bao phủ spec.</td>
+              </tr>
+              <tr>
+                <td>Công cụ thường dùng</td>
+                <td>Playwright, Cypress, axe-core, Percy hoặc Chromatic, Lighthouse.</td>
+                <td>Postman/Newman, REST Assured, Karate, Pact, Schemathesis, k6 hoặc Gatling.</td>
+              </tr>
+              <tr>
+                <td>“Bị chặn” thường nghĩa là</td>
+                <td>UI staging sập, widget bên thứ ba hoặc CAPTCHA, tài khoản test hỏng.</td>
+                <td>Dịch vụ hoặc phụ thuộc sập, nơi cấp token hỏng, seed DB lệch, mock lệch.</td>
+              </tr>
+              <tr>
+                <td>Yếu tố quyết định mức độ</td>
+                <td>Luồng chặn người dùng, mất dữ liệu trên màn hình, bẫy bàn phím, vỡ bố cục.</td>
+                <td>Hỏng dữ liệu, vượt quyền authz, phá vỡ contract, 5xx lõi, vi phạm SLA độ trễ.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Báo cáo UI cần thêm gì</h2>
+        <p>Ngoài khung dùng chung, báo cáo UI mang bằng chứng cho thấy môi trường là một phần của kết quả.</p>
+        <h3>Ma trận môi trường (ví dụ)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Trình duyệt</th><th scope="col">Phiên bản</th><th scope="col">OS</th><th scope="col">Viewport</th><th scope="col">Kết quả</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Chromium (Chrome 142)</td><td>142</td><td>macOS 15</td><td>1440×900</td><td>Đạt</td></tr>
+              <tr><td>WebKit (Safari 19)</td><td>19</td><td>macOS 15</td><td>1440×900</td><td>Không đạt — BUG-456</td></tr>
+              <tr><td>WebKit (iOS Safari)</td><td>19</td><td>iOS 19</td><td>390×844</td><td>Chưa chạy</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Độ phủ hành trình (ví dụ)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Hành trình</th><th scope="col">Chrome</th><th scope="col">Safari</th><th scope="col">Firefox</th><th scope="col">Mobile</th><th scope="col">A11y</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Đăng ký / đăng nhập</td><td>Đạt</td><td>Đạt</td><td>Đạt</td><td>Đạt</td><td>Đạt</td></tr>
+              <tr><td>Thanh toán có mã giảm giá</td><td>Không đạt (BUG-456)</td><td>Không đạt (BUG-456)</td><td>Đạt</td><td>Chưa chạy</td><td>Đạt</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Cũng phải khai báo, hoặc đánh dấu ngoài phạm vi</h3>
+        <ul class="list">
+          <li>Trạng thái hình ảnh: rỗng, đang tải, lỗi, dữ liệu một phần, chuỗi dài.</li>
+          <li>Khả năng tiếp cận: WCAG 2.2 AA, thao tác chỉ bằng bàn phím, trình đọc màn hình, độ tương phản, zoom 200%.</li>
+          <li>i18n, RTL và các điểm ngắt responsive.</li>
+          <li>Baseline visual regression: diff nào là chủ đích, diff nào là lỗi.</li>
+          <li>Báo cáo chập chờn: tách kết quả lần chạy đầu khỏi retry, vì retry che giấu lỗi thật.</li>
+        </ul>
+
+        <h2>Báo cáo API cần thêm gì</h2>
+        <p>Báo cáo API thay ma trận trình duyệt bằng trạng thái dịch vụ và hợp đồng. Bằng chứng là request và response, không phải màn hình.</p>
+        <h3>Khối dịch vụ và hợp đồng (ví dụ)</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">Dịch vụ cần kiểm thử</span>
+            <button type="button" class="copy-btn" data-copy="service-block-vi" data-copied="Đã chép" data-fallback="Nhấn ⌘C / Ctrl+C">Sao chép</button>
+          </div>
+          <pre id="service-block-vi" tabindex="0">Dịch vụ: orders-svc 2.14.3 (image sha-3f2a91c)
+Base URL: https://staging-api.example.com/orders/v2
+Spec: OpenAPI 3.1 @ commit a1b2c3d (diff so với bản trước: 2 trường mới)
+Auth: OAuth2 client-credentials, scope [orders:write], tenant=acme
+Dữ liệu: fixtures seed-2025-11-18-a; đã chạy cleanup: có
+Phụ thuộc: payment-svc 1.9.2 (thật), inventory (mock v4)</pre>
+        </div>
+        <h3>Độ phủ thao tác và ma trận authz (ví dụ)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Endpoint</th><th scope="col">Phương thức</th><th scope="col">Happy</th><th scope="col">Kiểm tra hợp lệ</th><th scope="col">AuthZ</th><th scope="col">Schema</th><th scope="col">Kết quả</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>/orders</td><td>POST</td><td>Đạt</td><td>4/5 đạt</td><td>Đạt</td><td>Đạt</td><td>Không đạt — BUG-401</td></tr>
+              <tr><td>/orders/{id}</td><td>GET</td><td>Đạt</td><td>Đạt</td><td>Đạt</td><td>Đạt</td><td>Đạt</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Ma trận auth là tương đương API của kiểm thử đa trình duyệt: anonymous / customer / support / admin × mọi thao tác → xác minh 401, 403 hoặc 200.</p>
+        <h3>Cũng cần có</h3>
+        <ul class="list">
+          <li>Xác thực hợp đồng: response schema được kiểm tra với OpenAPI; thay đổi phá vỡ được gắn cờ.</li>
+          <li>Idempotency và retry: cùng một khóa áp dụng hai lần, lần gọi thứ hai trả về gì.</li>
+          <li>Toàn vẹn dữ liệu: trạng thái DB trước và sau, side effect được xác minh.</li>
+          <li>Rate limit và concurrency: hành vi 429, race condition.</li>
+          <li>Hiệu năng, nếu trong phạm vi: p95/p99 so với ngân sách từng thao tác.</li>
+          <li>Phân loại lỗi: 500 có đúng là 5xx? Lỗi validation trả 422 hay 400 có nhất quán?</li>
+        </ul>
+        <div class="callout">
+          <span class="callout-label">Quy tắc cứng</span>
+          <p>Không bao giờ đưa token, cookie hay PII vào bằng chứng request/response. Che header và body trong báo cáo; chỉ đính kèm log đầy đủ vào ticket nếu chính sách cho phép.</p>
+        </div>
+
+        <h2>Mục lỗi cũng khác nhau</h2>
+        <p>Cùng bộ trường, khác bằng chứng. Mục UI chứng minh người dùng thấy gì; mục API chứng minh dịch vụ trả về gì.</p>
+        <h3>Lỗi UI</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">BUG-456 · UI</span>
+            <button type="button" class="copy-btn" data-copy="defect-ui-vi" data-copied="Đã chép" data-fallback="Nhấn ⌘C / Ctrl+C">Sao chép</button>
+          </div>
+          <pre id="defect-ui-vi" tabindex="0">BUG-456 — Thanh toán trả về HTTP 500 khi giỏ hàng có mã giảm giá
+Trình duyệt/OS/Viewport: Chrome 142 / macOS 15 / 1440×900
+Các bước: 1. Thêm sản phẩm  2. Áp dụng SAVE10  3. Bấm "Đặt hàng"
+Mong đợi: trang xác nhận; Thực tế: toast lỗi, nút quay vòng
+Bằng chứng: screenshot.png, recording.mp4, console-errors.txt, orders.har
+Incognito: cũng lỗi | Safari: cũng lỗi | Mobile: chưa kiểm tra
+Ảnh hưởng a11y: không | Màn hình: /checkout</pre>
+        </div>
+        <h3>Lỗi API</h3>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">BUG-401 · API</span>
+            <button type="button" class="copy-btn" data-copy="defect-api-vi" data-copied="Đã chép" data-fallback="Nhấn ⌘C / Ctrl+C">Sao chép</button>
+          </div>
+          <pre id="defect-api-vi" tabindex="0">BUG-401 — POST /orders trả về 500 khi giỏ hàng có mã giảm giá
+Dịch vụ: orders-svc 2.14.3 | Môi trường: staging | Spec: OpenAPI a1b2c3d
+Auth: customer JWT, tenant=acme, scope orders:write
+Request: POST /api/orders  body: {cartId, code:"SAVE10"}  (header đã che)
+Mong đợi: 201 + Order schema v2
+Thực tế: 500 + {"error":"null_pointer_at_discount.calc"}
+Correlation ID: 5f3c9a1e-... | Trace: liên kết Jaeger
+Điều kiện dữ liệu: cart 98765 với SAVE10; đã xác nhận cleanup
+Phụ thuộc: payment-svc 1.9.2 khỏe mạnh
+Tái hiện bằng curl: có, 10/10
+Ảnh hưởng: mọi luồng thanh toán web và mobile dùng mã giảm giá</pre>
+        </div>
+
+        <h2>Quy lỗi về đúng tầng</h2>
+        <p>Một test UI thất bại không tự động là lỗi UI. Phân loại theo nơi bản sửa thuộc về.</p>
+        <ul class="list">
+          <li><strong>UI test fail vì API trả 500.</strong> Triệu chứng ở UI; nguyên nhân gốc ở API. Đếm lỗi một lần dưới API, liệt kê các hành trình bị ảnh hưởng là tác động, và để báo cáo UI liên kết tới lỗi API thay vì mở lỗi trùng.</li>
+          <li><strong>API lỗi nhưng UI xử lý gọn gàng.</strong> Một lỗi API; hành vi trạng thái lỗi đúng có thể là yêu cầu sản phẩm, không phải bug.</li>
+          <li><strong>API lỗi và UI trắng trang, treo hoặc mất dữ liệu đã nhập.</strong> Đó là lỗi UI thứ hai, riêng biệt: thiếu xử lý lỗi.</li>
+        </ul>
+        <p>Thêm hai trường vào mọi lỗi — <em>tầng phát hiện</em> và <em>tầng nguyên nhân gốc</em> — và tổng hợp chúng trong phần tóm tắt:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Tầng nguyên nhân gốc</th><th scope="col">Lỗi mở</th><th scope="col">Chặn phát hành</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>UI</td><td>3</td><td>1</td></tr>
+              <tr><td>API</td><td>2</td><td>2</td></tr>
+              <tr><td>Dùng chung / hạ tầng</td><td>1</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Một báo cáo phát hành, hai tầng</h2>
+        <p>Tạo một báo cáo phát hành với các phần theo tầng thay vì hai báo cáo cấp cao riêng biệt. Lãnh đạo muốn một kết luận; QA cần chi tiết riêng.</p>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">Dàn ý báo cáo phát hành</span>
+            <button type="button" class="copy-btn" data-copy="outline-vi" data-copied="Đã chép" data-fallback="Nhấn ⌘C / Ctrl+C">Sao chép</button>
+          </div>
+          <pre id="outline-vi" tabindex="0">1. Kết luận phát hành (một, kèm điều kiện)
+2. Phạm vi và tầng kiểm thử: bộ UI, bộ API, phần loại trừ của mỗi tầng
+3. Kết quả — UI: ma trận hành trình × trình duyệt, a11y, visual
+4. Kết quả — API: ma trận thao tác × mã trạng thái, ma trận auth, contract
+5. Hiệu năng (theo tầng, nếu trong phạm vi)
+6. Lỗi: một danh sách, gắn nhãn tầng phát hiện và tầng nguyên nhân gốc
+7. Rủi ro, khoảng trống được chấp nhận, rủi ro tồn dư theo tầng
+8. Mục lục bằng chứng: /evidence/ui, /evidence/api</pre>
+        </div>
+
+        <h2>Tiêu chí kết thúc khác nhau theo tầng</h2>
+        <h3>Tiêu chí kết thúc UI</h3>
+        <ul class="list">
+          <li>Tất cả hành trình P0 đạt trên ma trận trình duyệt và thiết bị đã thống nhất.</li>
+          <li>Không còn lỗi UI mức 1.</li>
+          <li>Không có vi phạm khả năng tiếp cận nghiêm trọng.</li>
+          <li>Visual diff được review và có chủ đích.</li>
+          <li>Tỷ lệ chập chờn dưới ngưỡng đã thống nhất.</li>
+        </ul>
+        <h3>Tiêu chí kết thúc API</h3>
+        <ul class="list">
+          <li>100% thao tác trong phạm vi có happy path, các ca negative chính và authz.</li>
+          <li>100% xác thực schema.</li>
+          <li>Không còn P1.</li>
+          <li>p95 trong ngân sách.</li>
+          <li>Diff contract được review và tương thích ngược với các phiên bản hỗ trợ.</li>
+          <li>Không có bí mật trong log.</li>
+        </ul>
+
+        <h2>Quy tắc thực dụng</h2>
+        <p>Xây một chuẩn báo cáo duy nhất với các module theo tầng: phần tóm tắt, kết luận và phân loại lỗi dùng chung; khối môi trường, ma trận độ phủ, định dạng bằng chứng và chỉ số khởi tạo khác nhau cho UI và API. Trong pipeline tự động, đó là nhãn <code>layer: ui | api</code> cộng với artifact khác nhau theo tầng, cùng đổ về một bộ sinh báo cáo.</p>
+        <div class="closing">
+          <p>Biểu mẫu khác nhau ở nội dung, không khác ở chuẩn. <strong>Một khung, hai ngôn ngữ bằng chứng</strong> — và một kết luận duy nhất để release manager hành động.</p>
+        </div>
+      </article>
+    </div>
+
+    <nav id="prev-next" class="prev-next" aria-label="Document navigation"></nav>
+  </main>
+
+  <aside class="toc-aside" aria-labelledby="toc-label">
+    <p id="toc-label" class="toc-label">On this page</p>
+    <nav id="page-toc" aria-labelledby="toc-label"></nav>
+  </aside>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span data-en="QA Wiki · static docs" data-vi="QA Wiki · tài liệu tĩnh"></span>
+    <span data-en="Plain HTML · no build step" data-vi="HTML thuần · không cần build"></span>
+  </div>
+</footer>
+</body>
+</html>

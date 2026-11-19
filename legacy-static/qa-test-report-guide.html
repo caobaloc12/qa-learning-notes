@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>QA Test Report Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="assets/wiki.css">
+<script src="assets/wiki.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content · Bỏ qua nội dung</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <button id="menu-btn" class="menu-btn" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+      </svg>
+    </button>
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"></rect>
+        <path d="M8.3 12.4l2.5 2.5 5-5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <span>QA Wiki</span>
+    </a>
+    <span class="topbar-spacer"></span>
+    <div class="lang" role="group" aria-label="Language / Ngôn ngữ">
+      <button type="button" data-set-lang="en" aria-pressed="true" aria-label="English">EN</button>
+      <button type="button" data-set-lang="vi" aria-pressed="false" aria-label="Tiếng Việt">VI</button>
+    </div>
+  </div>
+</header>
+
+<div id="backdrop" class="backdrop" hidden></div>
+
+<div class="layout">
+  <aside id="sidebar" class="sidebar" aria-label="Documentation navigation">
+    <ul>
+      <li><a href="index.html">QA Wiki</a></li>
+      <li><a href="qa-test-report-guide.html">Writing QA test reports</a></li>
+      <li><a href="api-vs-ui-test-reports.html">UI vs API test reports</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <div class="lang-block" lang="en" data-lang="en">
+      <article class="article">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="index.html">QA Wiki</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <span>Foundations</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span aria-current="page">Writing QA test reports</span>
+        </nav>
+        <p class="kicker">Reporting · Web UI</p>
+        <h1>How to write a QA test report</h1>
+        <p class="lede">A test report exists so someone else can decide — ship, fix first, or stop — with the least possible reading. Web UI testing adds one rule: the environment is part of the result.</p>
+        <div class="chips">
+          <span class="chip"><b>7</b> sections</span>
+          <span class="chip"><b>2</b> copy-ready templates</span>
+          <span class="chip"><b>5</b> result statuses</span>
+        </div>
+        <aside class="specimen" aria-label="Sample test summary card">
+          <div class="spec-head">
+            <span class="spec-label">Test summary · sample</span>
+            <span class="spec-build">3f2a91c</span>
+          </div>
+          <div><span class="vbadge">GO WITH CONDITIONS</span></div>
+          <div class="spec-bar" aria-hidden="true">
+            <span style="width:92.2%;background:var(--pass)"></span>
+            <span style="width:2.6%;background:var(--fail)"></span>
+            <span style="width:1.3%;background:var(--warn)"></span>
+            <span style="width:3.9%;background:var(--skip)"></span>
+          </div>
+          <ul class="spec-grid">
+            <li><i style="background:var(--pass)"></i>Passed <b>142</b></li>
+            <li><i style="background:var(--fail)"></i>Failed <b>4</b></li>
+            <li><i style="background:var(--warn)"></i>Blocked <b>2</b></li>
+            <li><i style="background:var(--skip)"></i>Skipped <b>6</b></li>
+          </ul>
+          <div class="spec-foot">Verified on Chrome 142 · Safari 19 · Firefox 143</div>
+        </aside>
+
+        <h2>The principles</h2>
+        <p>Everything below follows from one idea: the report is a decision tool, not a testing diary.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Principle</th><th scope="col">In practice</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Audience first</td>
+                <td>Leadership wants the verdict and the risks in 30 seconds; developers want repro steps and evidence. Put the summary on top, details in appendices.</td>
+              </tr>
+              <tr>
+                <td>Facts, not adjectives</td>
+                <td>“Checkout button returns HTTP 500 on submit” beats “checkout is broken”. Quantify: “fails 3/10 attempts”.</td>
+              </tr>
+              <tr>
+                <td>Reproducible</td>
+                <td>Anyone with the build ID, environment, account role and steps can reproduce it — or you have written an anecdote, not a defect.</td>
+              </tr>
+              <tr>
+                <td>Scope-honest</td>
+                <td>State what was not tested (features, browsers, edge cases, blocked areas). Residual risk is the most valuable section for a decision-maker.</td>
+              </tr>
+              <tr>
+                <td>Actionable</td>
+                <td>Every failure carries a severity, an owner or suggested owner, and a next step: fix now, defer, or accept the risk.</td>
+              </tr>
+              <tr>
+                <td>Consistent</td>
+                <td>Same template, same ID scheme (TC-123, BUG-456), same severity scale every time.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>What a summary report contains</h2>
+        <p>Order matters: the reader should reach the verdict before the detail.</p>
+        <ol class="steps">
+          <li><strong>Metadata.</strong> Report ID, author, testing window, <strong>build identifier (git SHA or build number)</strong>, environment URL, test data set, and the feature flags that were on.</li>
+          <li><strong>Executive summary.</strong> Pass, fail and blocked counts, requirement coverage, a <strong>verdict — Go / No-Go / Go with conditions</strong> — and the three to five things the reader must know.</li>
+          <li><strong>Scope.</strong> In scope, out of scope, and why (risk-based exclusions, blocked dependencies).</li>
+          <li><strong>Approach.</strong> Manual or automated, test types run (smoke, regression, cross-browser, accessibility, performance), tools and CI links. Link to raw results (Allure, Playwright HTML report, JUnit XML) instead of pasting logs.</li>
+          <li><strong>Results.</strong> Per feature or requirement, with the status breakdown below. Traceability to tickets and stories lets people judge coverage, not just pass rate.</li>
+          <li><strong>Defects.</strong> Open bugs sorted by severity, each row linking to its full ticket.</li>
+          <li><strong>Risks, known issues and deferred items.</strong> What is still broken, and why that is acceptable — or not.</li>
+          <li><strong>Recommendation.</strong> Explicit, with conditions: “ship if BUG-456 is fixed and the accessibility pass clears before GA”.</li>
+        </ol>
+        <h3>Three report types, kept separate</h3>
+        <dl class="types">
+          <div class="types-row">
+            <dt>Defect report</dt>
+            <dd>Per bug, written as found, immediately.</dd>
+          </div>
+          <div class="types-row">
+            <dt>Daily status</dt>
+            <dd>Short, during execution: progress, blockers, new defects.</dd>
+          </div>
+          <div class="types-row">
+            <dt>Summary / sign-off</dt>
+            <dd>At exit, decision-oriented: verdict, coverage, risks.</dd>
+          </div>
+        </dl>
+        <p>Mixing the three is the most common reporting failure. A defect buried in a status update, or a verdict buried in a bug list, helps nobody.</p>
+
+        <h2>Report statuses properly</h2>
+        <p>Never collapse everything into pass or fail. Each status below is a different fact about the run.</p>
+        <div class="table-wrap">
+          <table class="status-table">
+            <thead>
+              <tr><th scope="col">Status</th><th scope="col">Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge pass">Passed</span></td><td>Verified against the expected result.</td></tr>
+              <tr><td><span class="badge fail">Failed</span></td><td>Verified against the expected result; the result differed.</td></tr>
+              <tr><td><span class="badge warn">Blocked</span></td><td>Could not run: a dependency is broken or the environment is down.</td></tr>
+              <tr><td><span class="badge skip">Not run / skipped</span></td><td>Out of scope or deprioritized. Must be declared, never implied.</td></tr>
+              <tr><td><span class="badge flaky">Flaky</span></td><td>Passed and failed across runs; report the rate, not the last result.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <span class="callout-label">The number to distrust</span>
+          <p>“100% passed” is meaningless if 40% of the suite was skipped. Pass rate without coverage is the most misleading metric in QA reporting.</p>
+        </div>
+        <p>Other metrics worth including: requirement coverage, open defects by severity, defect density per feature, escaped defects, flake rate, and total execution time. Leave out vanity metrics such as the raw number of test cases executed.</p>
+
+        <h2>Details that make a web UI report credible</h2>
+        <p>On the web, the environment is part of the result. The same build passes in one browser and fails in another, and a report without the environment cannot say which.</p>
+        <h3>Environment matrix: always exact</h3>
+        <ul class="list">
+          <li>Browser and version (never “latest Chrome”), operating system, device.</li>
+          <li>Viewport and resolution, zoom level, desktop or mobile.</li>
+          <li>Locale, timezone, and network throttling for performance or loading issues.</li>
+          <li>User role and permissions, feature-flag or A/B bucket, and the data set used.</li>
+        </ul>
+        <h3>Evidence beyond a screenshot</h3>
+        <ul class="list">
+          <li>Annotated screenshot with an arrow on the failing element.</li>
+          <li>Short screen recording for dynamic issues (Playwright trace, Loom, QuickTime).</li>
+          <li>Browser console errors, verbatim.</li>
+          <li>Network tab or HAR file: status codes, payloads, CORS errors.</li>
+          <li>Whether it reproduces in incognito, or after clearing cache and cookies.</li>
+          <li>Reproduction rate, and whether the failure is intermittent.</li>
+        </ul>
+        <h3>Cover explicitly, or declare out of scope</h3>
+        <ul class="list">
+          <li>Browsers: Chrome, Safari, Firefox, Edge; plus iOS Safari and Android Chrome.</li>
+          <li>Responsive breakpoints around each design target.</li>
+          <li>Accessibility to WCAG 2.2 AA: keyboard-only navigation, a screen reader (VoiceOver or NVDA), contrast, 200% zoom.</li>
+          <li>Localization: long strings and right-to-left layouts where relevant.</li>
+          <li>Performance budgets or Core Web Vitals, if in scope.</li>
+          <li>Session edge cases: expiry, the back button, refresh, deep links, multiple tabs, slow or offline networks.</li>
+        </ul>
+
+        <h2>Writing a defect: one per report</h2>
+        <p>The defect entry is the highest-leverage text a QA engineer writes. This is the shape that survives review.</p>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">BUG-456 · defect report</span>
+            <button type="button" class="copy-btn" data-copy="code-defect-en" data-copied="Copied" data-fallback="Press ⌘C / Ctrl+C">Copy</button>
+          </div>
+          <pre id="code-defect-en" tabindex="0">BUG-456 — Checkout returns HTTP 500 when the cart has a discount code
+Severity: Critical (blocks purchase) | Priority: P1
+Build: 3f2a91c | Env: staging, Chrome 142 / macOS 15 / 1440×900
+Role: signed-in customer | Flags: checkout_v2=on
+
+Preconditions: cart has ≥1 item; user holds a valid SAVE10 code
+Steps:
+  1. Add any item to the cart
+  2. Go to /checkout, enter SAVE10, click Apply
+  3. Click "Place order"
+Expected: order confirmation page, order created
+Actual: button spins, then toast "Something went wrong"; Network tab shows
+        POST /api/orders → 500 (response body attached)
+
+Evidence: recording.mp4, console-errors.txt, orders.har, screenshot.png
+Repro rate: 10/10 | Also fails in incognito: yes | Safari: not tested</pre>
+        </div>
+        <ul class="list">
+          <li>Minimal numbered steps: the shortest path to the failure.</li>
+          <li>Expected and actual, always both.</li>
+          <li>Separate severity (impact: blocker, critical, major, minor, trivial) from priority (urgency to fix).</li>
+          <li>No severity inflation. Credibility is a budget you spend once.</li>
+          <li>Never “it doesn’t work” without the exact symptom and reproduction rate.</li>
+        </ul>
+
+        <h2>What to leave out</h2>
+        <p>Each of these costs the reader trust. Drop them before adding anything new.</p>
+        <ul class="anti">
+          <li>“All tests passed” with no scope or build ID.</li>
+          <li>Screenshots with no steps or environment.</li>
+          <li>Several bugs crammed into one ticket.</li>
+          <li>Raw logs pasted instead of linked.</li>
+          <li>The ship / no-ship verdict buried on page nine.</li>
+          <li>Hedged language (“it seems like…”) where the observed fact and your confidence would do.</li>
+          <li>Reporting only the happy path, silently omitting blocked and skipped areas.</li>
+          <li>Editing the template after the fact instead of agreeing exit criteria before testing starts.</li>
+        </ul>
+
+        <h2>Copy, paste, adapt</h2>
+        <p>Two starting points: the release summary below and the defect entry above. Keep the structure; localize the labels.</p>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">Test summary · template</span>
+            <button type="button" class="copy-btn" data-copy="code-template-en" data-copied="Copied" data-fallback="Press ⌘C / Ctrl+C">Copy</button>
+          </div>
+          <pre id="code-template-en" tabindex="0"># Test Summary — &lt;Release&gt; / &lt;Build SHA&gt;
+Author · Date · Test window · Environment · Test data · Feature flags
+
+## Verdict: GO / NO-GO / GO WITH CONDITIONS
+&lt;2–4 sentences: coverage, worst open issues, the decision needed&gt;
+
+## Results
+Passed X | Failed Y | Blocked Z | Not run W | Flaky V
+Requirement coverage: N/M (linked list)
+
+## Scope
+In: …   Out (why): …
+
+## Open defects
+| ID | Severity | Title | Owner | Status |
+
+## Risks / known issues / accepted defects
+…
+
+## Evidence
+CI run links · screenshots · recordings · HAR files</pre>
+        </div>
+        <div class="closing">
+          <p>The report worth optimizing for: a release manager skims the top ten lines, trusts the numbers because scope is stated, and can forward one bug link to a developer <strong>without asking you a single follow-up question.</strong></p>
+        </div>
+      </article>
+    </div>
+
+    <div class="lang-block" lang="vi" data-lang="vi">
+      <article class="article">
+        <nav class="crumbs" aria-label="Đường dẫn">
+          <a href="index.html">QA Wiki</a>
+          <span class="sep" aria-hidden="true">/</span>
+          <span>Nền tảng</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span aria-current="page">Viết báo cáo kiểm thử QA</span>
+        </nav>
+        <p class="kicker">Báo cáo · Giao diện web</p>
+        <h1>Cách viết báo cáo kiểm thử QA</h1>
+        <p class="lede">Báo cáo kiểm thử tồn tại để người khác ra quyết định — phát hành, sửa trước, hay dừng lại — với ít phải đọc nhất. Kiểm thử giao diện web thêm một quy tắc: môi trường là một phần của kết quả.</p>
+        <div class="chips">
+          <span class="chip"><b>7</b> phần</span>
+          <span class="chip"><b>2</b> biểu mẫu sao chép được</span>
+          <span class="chip"><b>5</b> trạng thái kết quả</span>
+        </div>
+        <aside class="specimen" aria-label="Thẻ tóm tắt kiểm thử mẫu">
+          <div class="spec-head">
+            <span class="spec-label">Tóm tắt kiểm thử · mẫu</span>
+            <span class="spec-build">3f2a91c</span>
+          </div>
+          <div><span class="vbadge">GO CÓ ĐIỀU KIỆN</span></div>
+          <div class="spec-bar" aria-hidden="true">
+            <span style="width:92.2%;background:var(--pass)"></span>
+            <span style="width:2.6%;background:var(--fail)"></span>
+            <span style="width:1.3%;background:var(--warn)"></span>
+            <span style="width:3.9%;background:var(--skip)"></span>
+          </div>
+          <ul class="spec-grid">
+            <li><i style="background:var(--pass)"></i>Đạt <b>142</b></li>
+            <li><i style="background:var(--fail)"></i>Không đạt <b>4</b></li>
+            <li><i style="background:var(--warn)"></i>Bị chặn <b>2</b></li>
+            <li><i style="background:var(--skip)"></i>Bỏ qua <b>6</b></li>
+          </ul>
+          <div class="spec-foot">Đã xác minh trên Chrome 142 · Safari 19 · Firefox 143</div>
+        </aside>
+
+        <h2>Các nguyên tắc</h2>
+        <p>Mọi phần dưới đây xuất phát từ một ý: báo cáo là công cụ ra quyết định, không phải nhật ký kiểm thử.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th scope="col">Nguyên tắc</th><th scope="col">Thực tế áp dụng</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Người đọc là trên hết</td>
+                <td>Lãnh đạo muốn kết luận và rủi ro trong 30 giây; lập trình viên muốn bước tái hiện và bằng chứng. Tóm tắt đặt lên đầu, chi tiết xuống phụ lục.</td>
+              </tr>
+              <tr>
+                <td>Sự thật, không phải tính từ</td>
+                <td>“Nút thanh toán trả về HTTP 500 khi gửi” tốt hơn “thanh toán bị lỗi”. Định lượng: “lỗi 3/10 lần thử”.</td>
+              </tr>
+              <tr>
+                <td>Có thể tái hiện</td>
+                <td>Bất kỳ ai có mã build, môi trường, vai trò tài khoản và các bước đều tái hiện được — nếu không, đó là giai thoại, không phải báo cáo lỗi.</td>
+              </tr>
+              <tr>
+                <td>Trung thực về phạm vi</td>
+                <td>Nêu rõ những gì không được kiểm thử (tính năng, trình duyệt, ca biên, phần bị chặn). Rủi ro tồn dư là phần giá trị nhất với người ra quyết định.</td>
+              </tr>
+              <tr>
+                <td>Có thể hành động</td>
+                <td>Mỗi lỗi cần mức độ nghiêm trọng, người phụ trách (hoặc đề xuất), và bước tiếp theo: sửa ngay, hoãn, hay chấp nhận rủi ro.</td>
+              </tr>
+              <tr>
+                <td>Nhất quán</td>
+                <td>Cùng một biểu mẫu, cùng quy ước ID (TC-123, BUG-456), cùng thang mức độ ở mọi lần.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Báo cáo tổng kết gồm những gì</h2>
+        <p>Thứ tự quan trọng: người đọc phải thấy kết luận trước phần chi tiết.</p>
+        <ol class="steps">
+          <li><strong>Siêu dữ liệu.</strong> Mã báo cáo, tác giả, khoảng thời gian kiểm thử, <strong>định danh build (git SHA hoặc số build)</strong>, URL môi trường, bộ dữ liệu kiểm thử, và các cờ tính năng đang bật.</li>
+          <li><strong>Tóm tắt điều hành.</strong> Số lượng đạt, không đạt và bị chặn, độ phủ yêu cầu, một <strong>kết luận — Go / No-Go / Go có điều kiện</strong> — và ba đến năm điều người đọc bắt buộc phải biết.</li>
+          <li><strong>Phạm vi.</strong> Trong phạm vi, ngoài phạm vi và lý do (loại trừ theo rủi ro, phụ thuộc bị chặn).</li>
+          <li><strong>Cách tiếp cận.</strong> Thủ công hay tự động, các loại kiểm thử đã chạy (smoke, hồi quy, đa trình duyệt, khả năng tiếp cận, hiệu năng), công cụ và liên kết CI. Liên kết tới kết quả thô (Allure, Playwright HTML report, JUnit XML) thay vì dán log.</li>
+          <li><strong>Kết quả.</strong> Theo từng tính năng hoặc yêu cầu, kèm phân rã trạng thái bên dưới. Truy vết tới ticket và story để người đọc đánh giá độ phủ, không chỉ tỷ lệ đạt.</li>
+          <li><strong>Lỗi.</strong> Các lỗi còn mở sắp xếp theo mức độ, mỗi dòng liên kết tới ticket đầy đủ.</li>
+          <li><strong>Rủi ro, vấn đề đã biết và mục hoãn lại.</strong> Cái gì còn hỏng, và vì sao có thể chấp nhận — hoặc không.</li>
+          <li><strong>Khuyến nghị.</strong> Dứt khoát, kèm điều kiện: “phát hành nếu BUG-456 được sửa và đợt kiểm tra khả năng tiếp cận đạt trước GA”.</li>
+        </ol>
+        <h3>Ba loại báo cáo, đừng trộn lẫn</h3>
+        <dl class="types">
+          <div class="types-row">
+            <dt>Báo cáo lỗi</dt>
+            <dd>Từng lỗi một, viết ngay khi phát hiện.</dd>
+          </div>
+          <div class="types-row">
+            <dt>Trạng thái hằng ngày</dt>
+            <dd>Ngắn, trong lúc thực thi: tiến độ, tắc nghẽn, lỗi mới.</dd>
+          </div>
+          <div class="types-row">
+            <dt>Tổng kết / ký duyệt</dt>
+            <dd>Khi kết thúc, hướng tới quyết định: kết luận, độ phủ, rủi ro.</dd>
+          </div>
+        </dl>
+        <p>Trộn lẫn ba loại này là lỗi báo cáo phổ biến nhất. Một lỗi bị chôn trong cập nhật tiến độ, hay một kết luận bị chôn trong danh sách bug, không giúp được ai.</p>
+
+        <h2>Báo cáo trạng thái cho đúng</h2>
+        <p>Đừng gộp tất cả thành đạt hoặc không đạt. Mỗi trạng thái dưới đây là một sự thật khác nhau về lần chạy.</p>
+        <div class="table-wrap">
+          <table class="status-table">
+            <thead>
+              <tr><th scope="col">Trạng thái</th><th scope="col">Ý nghĩa</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge pass">Đạt</span></td><td>Đã xác minh, khớp với kết quả mong đợi.</td></tr>
+              <tr><td><span class="badge fail">Không đạt</span></td><td>Đã xác minh nhưng kết quả khác mong đợi.</td></tr>
+              <tr><td><span class="badge warn">Bị chặn</span></td><td>Không thể thực thi: phụ thuộc bị hỏng hoặc môi trường sập.</td></tr>
+              <tr><td><span class="badge skip">Chưa chạy / bỏ qua</span></td><td>Ngoài phạm vi hoặc giảm ưu tiên. Phải khai báo rõ, không được ngầm hiểu.</td></tr>
+              <tr><td><span class="badge flaky">Chập chờn</span></td><td>Đạt và không đạt qua các lần chạy; báo cáo tỷ lệ, không phải kết quả lần cuối.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout">
+          <span class="callout-label">Con số đáng ngờ nhất</span>
+          <p>“Tỷ lệ đạt 100%” vô nghĩa nếu 40% bộ kiểm thử bị bỏ qua. Tỷ lệ đạt mà thiếu độ phủ là chỉ số gây nhầm lẫn nhất trong báo cáo QA.</p>
+        </div>
+        <p>Các chỉ số khác nên có: độ phủ yêu cầu, số lỗi mở theo mức độ, mật độ lỗi theo tính năng, lỗi lọt ra ngoài (escaped defects), tỷ lệ chập chờn, và tổng thời gian thực thi. Bỏ qua các chỉ số hình thức như số lượng test case đã chạy.</p>
+
+        <h2>Những chi tiết làm báo cáo UI web đáng tin</h2>
+        <p>Trên web, môi trường là một phần của kết quả. Cùng một build có thể đạt trên trình duyệt này và lỗi trên trình duyệt khác; báo cáo thiếu môi trường thì không thể nói là trường hợp nào.</p>
+        <h3>Ma trận môi trường: luôn chính xác</h3>
+        <ul class="list">
+          <li>Trình duyệt và phiên bản (không bao giờ “Chrome mới nhất”), hệ điều hành, thiết bị.</li>
+          <li>Viewport và độ phân giải, mức zoom, desktop hay mobile.</li>
+          <li>Locale, múi giờ, và điều kiện mạng (throttling) cho các vấn đề hiệu năng hoặc tải trang.</li>
+          <li>Vai trò và quyền người dùng, nhóm cờ tính năng hoặc A/B, và bộ dữ liệu đã dùng.</li>
+        </ul>
+        <h3>Bằng chứng ngoài ảnh chụp màn hình</h3>
+        <ul class="list">
+          <li>Ảnh chụp có chú thích, mũi tên chỉ đúng phần tử lỗi.</li>
+          <li>Video ngắn cho các vấn đề động (Playwright trace, Loom, QuickTime).</li>
+          <li>Lỗi console trình duyệt, nguyên văn.</li>
+          <li>Tab Network hoặc tệp HAR: mã trạng thái, payload, lỗi CORS.</li>
+          <li>Có tái hiện trong incognito, hoặc sau khi xóa cache và cookie hay không.</li>
+          <li>Tỷ lệ tái hiện, và lỗi có chập chờn hay không.</li>
+        </ul>
+        <h3>Phải bao phủ rõ ràng, hoặc tuyên bố ngoài phạm vi</h3>
+        <ul class="list">
+          <li>Trình duyệt: Chrome, Safari, Firefox, Edge; thêm iOS Safari và Android Chrome.</li>
+          <li>Các điểm ngắt responsive quanh từng mục tiêu thiết kế.</li>
+          <li>Khả năng tiếp cận theo WCAG 2.2 AA: điều hướng chỉ bằng bàn phím, trình đọc màn hình (VoiceOver hoặc NVDA), độ tương phản, zoom 200%.</li>
+          <li>Bản địa hóa: chuỗi dài và bố cục phải-sang-trái (RTL) khi áp dụng.</li>
+          <li>Ngân sách hiệu năng hoặc Core Web Vitals, nếu trong phạm vi.</li>
+          <li>Các ca biên của phiên: hết hạn, nút Back, refresh, deep link, nhiều tab, mạng chậm hoặc offline.</li>
+        </ul>
+
+        <h2>Viết báo cáo lỗi: mỗi báo cáo một lỗi</h2>
+        <p>Mục báo cáo lỗi là đoạn văn có đòn bẩy cao nhất mà kỹ sư QA viết. Đây là dạng thức trụ được qua review.</p>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">BUG-456 · báo cáo lỗi</span>
+            <button type="button" class="copy-btn" data-copy="code-defect-vi" data-copied="Đã chép" data-fallback="Nhấn ⌘C / Ctrl+C">Sao chép</button>
+          </div>
+          <pre id="code-defect-vi" tabindex="0">BUG-456 — Thanh toán trả về HTTP 500 khi giỏ hàng có mã giảm giá
+Mức độ: Nghiêm trọng (chặn mua hàng) | Ưu tiên: P1
+Build: 3f2a91c | Môi trường: staging, Chrome 142 / macOS 15 / 1440×900
+Vai trò: khách hàng đã đăng nhập | Cờ: checkout_v2=on
+
+Điều kiện trước: giỏ hàng có ≥1 sản phẩm; người dùng có mã SAVE10 hợp lệ
+Các bước:
+  1. Thêm một sản phẩm bất kỳ vào giỏ
+  2. Vào /checkout, nhập SAVE10, bấm Áp dụng
+  3. Bấm "Đặt hàng"
+Kỳ vọng: trang xác nhận đơn hàng, đơn hàng được tạo
+Thực tế: nút quay vòng, sau đó hiện toast "Đã xảy ra lỗi"; tab Network cho thấy
+        POST /api/orders → 500 (nội dung phản hồi đính kèm)
+
+Bằng chứng: recording.mp4, console-errors.txt, orders.har, screenshot.png
+Tỷ lệ tái hiện: 10/10 | Cũng lỗi trong incognito: có | Safari: chưa kiểm tra</pre>
+        </div>
+        <ul class="list">
+          <li>Các bước ngắn nhất, đánh số: đường ngắn nhất tới lỗi.</li>
+          <li>Luôn có cả kỳ vọng và thực tế.</li>
+          <li>Tách mức độ (tác động: chặn, nghiêm trọng, lớn, nhỏ, không đáng kể) khỏi ưu tiên (độ khẩn cấp để sửa).</li>
+          <li>Không thổi phồng mức độ. Uy tín là ngân sách chỉ tiêu được một lần.</li>
+          <li>Không bao giờ viết “không hoạt động” mà thiếu triệu chứng chính xác và tỷ lệ tái hiện.</li>
+        </ul>
+
+        <h2>Những điều không nên viết</h2>
+        <p>Mỗi điều dưới đây đều làm mất niềm tin của người đọc. Bỏ chúng trước khi thêm bất cứ thứ gì mới.</p>
+        <ul class="anti">
+          <li>“Tất cả kiểm thử đều đạt” mà không có phạm vi hay mã build.</li>
+          <li>Ảnh chụp màn hình không kèm bước tái hiện và môi trường.</li>
+          <li>Nhiều lỗi nhét chung vào một ticket.</li>
+          <li>Dán log thô thay vì liên kết tới chúng.</li>
+          <li>Chôn kết luận phát hành ở trang thứ chín.</li>
+          <li>Ngôn ngữ rào đón (“có vẻ như…”) trong khi sự thật quan sát được và độ tin cậy của nó là đủ.</li>
+          <li>Chỉ báo cáo luồng thuận (happy path) và lặng lẽ bỏ qua phần bị chặn hoặc đã bỏ.</li>
+          <li>Sửa biểu mẫu sau khi kiểm thử xong thay vì thống nhất tiêu chí kết thúc từ trước.</li>
+        </ul>
+
+        <h2>Sao chép, dán, điều chỉnh</h2>
+        <p>Hai điểm khởi đầu: báo cáo tổng kết phát hành (dưới đây) và báo cáo lỗi (ở trên). Giữ nguyên cấu trúc, bản địa hóa nhãn.</p>
+        <div class="code">
+          <div class="code-head">
+            <span class="code-title">Tóm tắt kiểm thử · biểu mẫu</span>
+            <button type="button" class="copy-btn" data-copy="code-template-vi" data-copied="Đã chép" data-fallback="Nhấn ⌘C / Ctrl+C">Sao chép</button>
+          </div>
+          <pre id="code-template-vi" tabindex="0"># Tóm tắt kiểm thử — &lt;Bản phát hành&gt; / &lt;Build SHA&gt;
+Tác giả · Ngày · Khoảng thời gian kiểm thử · Môi trường · Dữ liệu · Cờ tính năng
+
+## Kết luận: GO / NO-GO / GO CÓ ĐIỀU KIỆN
+&lt;2–4 câu: độ phủ, vấn đề mở nghiêm trọng nhất, quyết định cần đưa ra&gt;
+
+## Kết quả
+Đạt X | Không đạt Y | Bị chặn Z | Chưa chạy W | Chập chờn V
+Độ phủ yêu cầu: N/M (danh sách liên kết)
+
+## Phạm vi
+Trong: …   Ngoài (lý do): …
+
+## Lỗi còn mở
+| ID | Mức độ | Tiêu đề | Người phụ trách | Trạng thái |
+
+## Rủi ro / vấn đề đã biết / lỗi được chấp nhận
+…
+
+## Bằng chứng
+Liên kết CI · ảnh chụp · video · tệp HAR</pre>
+        </div>
+        <div class="closing">
+          <p>Mẫu báo cáo đáng để tối ưu: một release manager lướt mười dòng đầu, tin vào các con số vì phạm vi đã được nêu rõ, và chuyển được một liên kết lỗi cho lập trình viên <strong>mà không cần hỏi bạn thêm câu nào.</strong></p>
+        </div>
+      </article>
+    </div>
+
+    <nav id="prev-next" class="prev-next" aria-label="Document navigation"></nav>
+  </main>
+
+  <aside class="toc-aside" aria-labelledby="toc-label">
+    <p id="toc-label" class="toc-label">On this page</p>
+    <nav id="page-toc" aria-labelledby="toc-label"></nav>
+  </aside>
+</div>
+
+<footer class="site-foot">
+  <div class="foot-inner">
+    <span data-en="QA Wiki · static docs" data-vi="QA Wiki · tài liệu tĩnh"></span>
+    <span data-en="Plain HTML · no build step" data-vi="HTML thuần · không cần build"></span>
+  </div>
+</footer>
+</body>
+</html>
